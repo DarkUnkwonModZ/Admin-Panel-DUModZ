@@ -2,286 +2,303 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DUMODZ | Ultra-Premium Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DUMODZ | Enterprise Admin Panel</title>
     
-    <!-- Dependencies -->
+    <!-- CSS Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
         :root {
-            --primary: #6366f1;
-            --accent: #4f46e5;
-            --dark-bg: #0b0f19;
-            --card-bg: #ffffff;
-            --sidebar-w: 280px;
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-dark: #0f172a;
+            --accent-color: #6366f1;
+            --danger-color: #ef4444;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
         }
 
         body {
             font-family: 'Outfit', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
+            background-color: #f8fafc;
+            color: #1e293b;
             margin: 0;
             overflow-x: hidden;
         }
 
-        /* 🔒 Improved Login Screen */
+        /* --- 🔐 Advanced Login Gate --- */
         #login-gate {
-            position: fixed; inset: 0; background: var(--dark-bg);
-            z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px;
+            position: fixed; inset: 0; background: var(--sidebar-dark);
+            z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 20px;
         }
         .login-card {
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
-            padding: 40px; border-radius: 30px; width: 100%; max-width: 420px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.3);
+            background: white; padding: 40px; border-radius: 28px; width: 100%; max-width: 400px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
         }
 
-        /* 📱 Smart Sidebar System */
+        /* --- 📱 Optimized Sidebar (Mobile First) --- */
         .sidebar {
-            width: var(--sidebar-w); background: var(--dark-bg); height: 100vh; position: fixed;
+            width: 280px; background: var(--sidebar-dark); height: 100vh; position: fixed;
             color: white; padding: 25px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-            z-index: 1500; left: 0;
+            z-index: 2000; left: -280px;
         }
+        .sidebar.active { left: 0; }
+        
         .sidebar-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); 
-            display: none; z-index: 1400; backdrop-filter: blur(3px);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4); 
+            display: none; z-index: 1900; backdrop-filter: blur(4px);
         }
-        
+        .sidebar-overlay.active { display: block; }
+
         .main-wrapper { 
-            margin-left: var(--sidebar-w); padding: 30px; 
-            transition: all 0.4s ease; min-height: 100vh; 
+            margin-left: 0; padding: 20px; transition: all 0.4s ease; min-height: 100vh;
         }
 
-        @media (max-width: 991px) {
-            .sidebar { left: calc(-1 * var(--sidebar-w)); }
-            .sidebar.active { left: 0; box-shadow: 10px 0 30px rgba(0,0,0,0.3); }
-            .main-wrapper { margin-left: 0; padding: 20px; }
-            .sidebar-overlay.active { display: block; }
+        @media (min-width: 992px) {
+            .sidebar { left: 0; }
+            .main-wrapper { margin-left: 280px; padding: 40px; }
+            .sidebar-overlay { display: none !important; }
         }
 
-        /* 🔘 Buttons & UI */
-        .btn-modern {
-            background: var(--primary); color: white; border-radius: 12px;
-            padding: 12px 25px; font-weight: 600; border: none; transition: 0.3s;
+        /* --- 💎 Premium UI Components --- */
+        .stat-card {
+            background: white; border-radius: 20px; padding: 20px; border: 1px solid #e2e8f0;
+            transition: 0.3s; height: 100%;
         }
-        .btn-modern:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); }
-        
-        .nav-link {
-            color: #94a3b8; padding: 12px 20px; border-radius: 12px; margin-bottom: 5px;
-            display: flex; align-items: center; transition: 0.3s; text-decoration: none;
-        }
-        .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: white; }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
-        /* 🎴 Key Cards */
         .key-card {
-            background: var(--card-bg); border-radius: 20px; border: 1px solid #e5e7eb;
-            padding: 24px; transition: 0.3s; height: 100%; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            background: white; border-radius: 24px; border: 1px solid #edf2f7;
+            padding: 20px; transition: 0.3s; position: relative; overflow: hidden;
         }
-        .key-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); border-color: var(--primary); }
+        .key-card:hover { border-color: var(--accent-color); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
         
-        .stat-badge { font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 10px; text-transform: uppercase; }
-        
-        .form-control { border-radius: 12px; padding: 12px; border: 1.5px solid #e5e7eb; }
-        .form-control:focus { box-shadow: none; border-color: var(--primary); }
+        .status-pill {
+            font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 100px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-expired { background: #fee2e2; color: #991b1b; }
+        .status-blocked { background: #f1f5f9; color: #475569; }
+        .status-lifetime { background: #ede9fe; color: #5b21b6; }
 
-        .search-wrapper { position: relative; max-width: 400px; width: 100%; }
-        .search-wrapper i { position: absolute; left: 15px; top: 15px; color: #94a3b8; }
-        .search-wrapper input { padding-left: 45px; }
+        .btn-modern {
+            background: var(--primary-gradient); color: white; border-radius: 14px;
+            padding: 12px 24px; font-weight: 600; border: none; transition: 0.3s;
+        }
+        .btn-modern:hover { transform: scale(1.02); box-shadow: 0 8px 15px rgba(79, 70, 229, 0.4); color: white; }
 
-        .close-sidebar-btn { position: absolute; right: 20px; top: 20px; display: none; color: white; cursor: pointer; font-size: 1.5rem; }
-        @media (max-width: 991px) { .close-sidebar-btn { display: block; } }
+        /* --- ⌨️ Inputs & Forms --- */
+        .form-control, .form-select {
+            border-radius: 12px; padding: 12px 16px; border: 1.5px solid #e2e8f0;
+            background: #f8fafc; font-size: 14px;
+        }
+        .form-control:focus { border-color: var(--accent-color); box-shadow: none; background: white; }
+
+        /* Search Box */
+        .search-container { position: relative; }
+        .search-container i { position: absolute; left: 15px; top: 14px; color: #94a3b8; }
+        .search-container input { padding-left: 45px; border-radius: 100px; }
+
+        /* Mobile Adjustments for 768px */
+        @media (max-width: 768px) {
+            .h3 { font-size: 1.5rem; }
+            .stat-card { padding: 15px; }
+            .key-card h5 { font-size: 1rem; }
+        }
     </style>
 </head>
 <body>
 
-<!-- 🧩 Background Overlay -->
 <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-<!-- 🔐 Secure Login Gate -->
+<!-- 🔐 Admin Login Gate -->
 <div id="login-gate" style="display: none;">
     <div class="login-card text-center">
-        <img src="https://raw.githubusercontent.com/DarkUnkwonModZ/Blogger-DarkUnkownModZ-Appinfo/refs/heads/main/IMG/circle-logo-dumodz.png" width="80" class="mb-3 rounded-circle border border-2 border-primary p-1">
-        <h4 class="fw-bold text-dark">Welcome Back</h4>
-        <p class="text-muted small mb-4">Secured Admin Access</p>
+        <img src="https://raw.githubusercontent.com/DarkUnkwonModZ/Blogger-DarkUnkownModZ-Appinfo/refs/heads/main/IMG/circle-logo-dumodz.png" width="70" class="mb-3 rounded-circle border border-3 border-primary shadow-sm">
+        <h3 class="fw-bold text-dark">DUMODZ PRO</h3>
+        <p class="text-muted small mb-4">Master Authentication Required</p>
         
         <div class="text-start">
             <div class="mb-3">
-                <label class="small fw-bold mb-1 text-secondary">Email Address</label>
-                <input type="text" id="log-email" class="form-control bg-light" value="du.darkunkwon.info@gmail.com" readonly>
+                <label class="small fw-bold text-secondary mb-1">Admin Email</label>
+                <input type="text" id="log-email" class="form-control" value="du.darkunkwon.info@gmail.com" readonly>
             </div>
             <div class="mb-4">
-                <label class="small fw-bold mb-1 text-secondary">Password</label>
-                <div class="input-group">
-                    <input type="password" id="log-pass" class="form-control" placeholder="••••••••">
-                </div>
+                <label class="small fw-bold text-secondary mb-1">Access Password</label>
+                <input type="password" id="log-pass" class="form-control" placeholder="Enter Secure Password">
             </div>
             <button class="btn btn-modern w-100 py-3" onclick="handleLogin()" id="login-btn">
-                <span id="login-text">Sign In</span>
+                <span id="login-text">Verify Admin</span>
             </button>
         </div>
     </div>
 </div>
 
-<!-- 📁 Modern Sidebar -->
+<!-- 📁 Sidebar -->
 <aside class="sidebar" id="sidebar">
-    <div class="close-sidebar-btn" onclick="toggleSidebar()"><i class="fas fa-times"></i></div>
-    <div class="mb-5 mt-3 px-2">
-        <h4 class="fw-bold mb-0">DUMODZ <span class="text-primary">PRO</span></h4>
-        <small class="text-secondary">v4.5 Enterprise</small>
+    <div class="d-flex align-items-center mb-5 mt-2">
+        <img src="https://raw.githubusercontent.com/DarkUnkwonModZ/Blogger-DarkUnkownModZ-Appinfo/refs/heads/main/IMG/circle-logo-dumodz.png" width="40" class="me-3">
+        <div>
+            <h5 class="fw-bold mb-0">DUMODZ</h5>
+            <small class="text-secondary">Version 5.0 Enterprise</small>
+        </div>
     </div>
-    <nav>
-        <a href="#" class="nav-link active"><i class="fas fa-chart-pie me-3"></i> Overview</a>
-        <a href="#appConfig" class="nav-link"><i class="fas fa-cog me-3"></i> App Config</a>
-        <a href="#keyManager" class="nav-link"><i class="fas fa-key me-3"></i> Key Database</a>
+    
+    <nav class="nav flex-column gap-2">
+        <a href="#" class="nav-link text-white active rounded-3 bg-primary bg-opacity-10 p-3"><i class="fas fa-grid-2 me-3"></i> Dashboard</a>
+        <a href="#appConfig" class="nav-link text-secondary p-3" onclick="toggleSidebar()"><i class="fas fa-sliders me-3"></i> App Config</a>
+        <a href="#keyManager" class="nav-link text-secondary p-3" onclick="toggleSidebar()"><i class="fas fa-key me-3"></i> Key Database</a>
     </nav>
-    <div style="position: absolute; bottom: 30px; width: 230px;">
-        <button class="btn btn-outline-danger w-100 rounded-3" onclick="handleLogout()">
-            <i class="fas fa-power-off me-2"></i> Logout
+
+    <div style="position: absolute; bottom: 30px; width: calc(100% - 50px);">
+        <button class="btn btn-outline-danger w-100 rounded-4 border-2 fw-bold" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt me-2"></i> Logout
         </button>
     </div>
 </aside>
 
-<!-- 🚀 Main Content Wrapper -->
+<!-- 🚀 Main Content -->
 <main class="main-wrapper">
-    <header class="d-flex justify-content-between align-items-center mb-5">
-        <div class="d-flex align-items-center">
-            <div class="btn btn-white shadow-sm d-lg-none me-3" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
-            <div>
-                <h3 class="fw-bold mb-0">Dashboard</h3>
-                <p class="text-muted mb-0 small">Manage your cloud services real-time.</p>
-            </div>
+    <header class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <button class="btn btn-light d-lg-none me-2" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <h3 class="fw-bold d-inline-block">Overview</h3>
         </div>
-        <button class="btn btn-modern d-none d-md-block" onclick="openAddModal()">
-            <i class="fas fa-plus me-2"></i> New Key
+        <button class="btn btn-modern shadow-sm px-4" onclick="openAddModal()">
+            <i class="fas fa-plus-circle me-2"></i> <span class="d-none d-sm-inline">New Key</span>
         </button>
     </header>
 
-    <!-- Stats Section -->
-    <div class="row g-4 mb-5">
-        <div class="col-6 col-lg-3">
-            <div class="key-card text-center border-0 shadow-sm p-4">
-                <h2 class="fw-bold text-primary mb-1" id="stat-total">0</h2>
-                <small class="text-muted fw-bold">TOTAL KEYS</small>
+    <!-- 📊 Stats Display -->
+    <div class="row g-3 mb-5">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <small class="text-secondary fw-bold">TOTAL KEYS</small>
+                <h2 class="fw-bold mt-2" id="stat-total">0</h2>
             </div>
         </div>
-        <div class="col-6 col-lg-3">
-            <div class="key-card text-center border-0 shadow-sm p-4">
-                <h2 class="fw-bold text-success mb-1" id="stat-active">0</h2>
-                <small class="text-muted fw-bold">ACTIVE</small>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <small class="text-success fw-bold">ACTIVE</small>
+                <h2 class="fw-bold mt-2 text-success" id="stat-active">0</h2>
             </div>
         </div>
-        <div class="col-6 col-lg-3">
-            <div class="key-card text-center border-0 shadow-sm p-4">
-                <h2 class="fw-bold text-danger mb-1" id="stat-expired">0</h2>
-                <small class="text-muted fw-bold">EXPIRED</small>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <small class="text-danger fw-bold">EXPIRED</small>
+                <h2 class="fw-bold mt-2 text-danger" id="stat-expired">0</h2>
             </div>
         </div>
-        <div class="col-6 col-lg-3">
-            <div class="key-card text-center border-0 shadow-sm p-4">
-                <h2 class="fw-bold text-info mb-1" id="stat-status">ON</h2>
-                <small class="text-muted fw-bold">DIALOG</small>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <small class="text-primary fw-bold">LIFETIME</small>
+                <h2 class="fw-bold mt-2 text-primary" id="stat-lifetime">0</h2>
             </div>
         </div>
     </div>
 
-    <!-- App Config Section -->
-    <section id="appConfig" class="key-card mb-5 border-0 shadow-sm">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0"><i class="fas fa-sliders-h me-2 text-primary"></i> App Settings</h5>
-            <button class="btn btn-dark btn-sm px-4 rounded-3" onclick="saveAppConfig()">Update</button>
-        </div>
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label class="small fw-bold text-secondary mb-1">App Title</label>
-                <input type="text" id="cfg-title" class="form-control mb-3">
-                <label class="small fw-bold text-secondary mb-1">Instruction Text</label>
-                <textarea id="cfg-ins" class="form-control" rows="4"></textarea>
+    <!-- ⚙️ App Configuration Section -->
+    <section id="appConfig" class="mb-5">
+        <div class="stat-card border-0 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold"><i class="fas fa-cog me-2 text-primary"></i> Global Configuration</h5>
+                <button class="btn btn-dark btn-sm rounded-3 px-3" onclick="saveAppConfig()">Update Info</button>
             </div>
-            <div class="col-md-6">
-                <label class="small fw-bold text-secondary mb-1">Logo Link</label>
-                <input type="text" id="cfg-logo" class="form-control mb-3">
-                <label class="small fw-bold text-secondary mb-1">Purchase Telegram Link</label>
-                <input type="text" id="cfg-buy" class="form-control mb-3">
-                <div class="form-check form-switch mt-4">
-                    <input class="form-check-input" type="checkbox" id="cfg-dialog" style="transform: scale(1.3);">
-                    <label class="form-check-label ms-2 fw-bold">Activate Global Login Dialog</label>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="small fw-bold text-muted mb-1">App Display Title</label>
+                    <input type="text" id="cfg-title" class="form-control mb-3">
+                    <label class="small fw-bold text-muted mb-1">Login Dialog Instruction</label>
+                    <textarea id="cfg-ins" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="small fw-bold text-muted mb-1">Logo URL</label>
+                    <input type="text" id="cfg-logo" class="form-control mb-3">
+                    <div class="form-check form-switch mt-4 bg-light p-3 rounded-3 border">
+                        <label class="form-check-label fw-bold small">Enable Login Dialog System</label>
+                        <input class="form-check-input float-end" type="checkbox" id="cfg-dialog">
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Key Manager Section -->
+    <!-- 🔑 Key Manager Section -->
     <section id="keyManager">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-            <h5 class="fw-bold mb-0">Key Database</h5>
-            <div class="search-wrapper">
+            <h5 class="fw-bold">Database Keys</h5>
+            <div class="search-container">
                 <i class="fas fa-search"></i>
-                <input type="text" id="search-input" class="form-control shadow-sm" placeholder="Search by Key Name or ID..." onkeyup="filterKeys()">
+                <input type="text" id="search-input" class="form-control border-0 shadow-sm" placeholder="Search keys or devices..." onkeyup="filterKeys()">
             </div>
         </div>
-        <div class="row g-4" id="keys-container">
-            <!-- Dynamic Keys Here -->
+        
+        <div class="row g-3" id="keys-container">
+            <!-- Dynamic Key Cards will load here -->
         </div>
     </section>
 </main>
 
-<!-- 🛠 Modal for License -->
-<div class="modal fade" id="keyModal" tabindex="-1" aria-hidden="true">
+<!-- 🛠 Modal for License Management -->
+<div class="modal fade" id="keyModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
-            <div class="modal-header bg-light border-0 px-4 py-3">
-                <h5 class="fw-bold mb-0" id="modalTitle">License Manager</h5>
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+            <div class="modal-header border-0 pb-0 px-4 pt-4">
+                <h5 class="fw-bold" id="modalTitle">License Settings</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
                 <input type="hidden" id="edit-id">
                 <div class="mb-3">
-                    <label class="small fw-bold mb-1">License Key Name</label>
+                    <label class="small fw-bold mb-1">Access Key</label>
                     <div class="input-group">
-                        <input type="text" id="key-name" class="form-control fw-bold" placeholder="DUMODZ-XXXX">
-                        <button class="btn btn-primary" onclick="generateKey()"><i class="fas fa-sync-alt"></i></button>
+                        <input type="text" id="key-name" class="form-control fw-bold border-end-0">
+                        <button class="btn btn-outline-primary border-start-0" onclick="generateKey()"><i class="fas fa-random"></i></button>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="small fw-bold mb-1">Expiry Date (Manual Text or Calendar)</label>
-                    <div class="input-group">
-                        <input type="text" id="key-expiry" class="form-control" placeholder="YYYY-MM-DD or Lifetime">
-                        <input type="date" class="form-control" style="max-width: 48px;" onchange="document.getElementById('key-expiry').value = this.value">
-                    </div>
+                    <label class="small fw-bold mb-1">Device Binding ID</label>
+                    <input type="text" id="key-device" class="form-control" placeholder="ANY">
                 </div>
                 <div class="row g-2">
-                    <div class="col-6">
-                        <label class="small fw-bold mb-1">Status</label>
-                        <select id="key-status" class="form-select">
-                            <option value="active">Active</option>
-                            <option value="lifetime">Lifetime</option>
-                            <option value="expired">Expired</option>
-                            <option value="blocked">Blocked</option>
-                        </select>
+                    <div class="col-7">
+                        <label class="small fw-bold mb-1">Expiry Date</label>
+                        <input type="text" id="key-expiry" class="form-control" placeholder="YYYY-MM-DD or Lifetime">
                     </div>
-                    <div class="col-6">
-                        <label class="small fw-bold mb-1">Device ID Lock</label>
-                        <input type="text" id="key-device" class="form-control" placeholder="Leave empty">
+                    <div class="col-5">
+                        <label class="small fw-bold mb-1">Select Date</label>
+                        <input type="date" class="form-control" onchange="document.getElementById('key-expiry').value = this.value">
                     </div>
                 </div>
+                <div class="mt-3">
+                    <label class="small fw-bold mb-1">Subscription Status</label>
+                    <select id="key-status" class="form-select">
+                        <option value="active">Active</option>
+                        <option value="lifetime">Lifetime</option>
+                        <option value="expired">Expired</option>
+                        <option value="blocked">Blocked</option>
+                    </select>
+                </div>
             </div>
-            <div class="modal-footer border-0 p-4 pt-0">
-                <button class="btn btn-modern w-100" onclick="saveKeyData()">Save Key Data</button>
+            <div class="modal-footer border-0 p-4">
+                <button class="btn btn-modern w-100" onclick="saveKeyData()">Save & Sync Database</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Firebase SDK -->
+<!-- Firebase Logic -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getDatabase, ref, onValue, set, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+    // Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyAqJ-pO0CvynjCCaskOkG6Jiht5a9aVwws",
         authDomain: "key-login-dialog.firebaseapp.com",
@@ -289,8 +306,7 @@
         projectId: "key-login-dialog",
         storageBucket: "key-login-dialog.firebasestorage.app",
         messagingSenderId: "710432558346",
-        appId: "1:710432558346:web:e4bc5310b70c652567bef3",
-        measurementId: "G-ZZEHBTGKKH"
+        appId: "1:710432558346:web:e4bc5310b70c652567bef3"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -300,145 +316,177 @@
     let masterData = null;
     const keyModal = new bootstrap.Modal(document.getElementById('keyModal'));
 
-    // --- 🔐 AUTH LOGIC (With Persistence) ---
+    // 🔐 AUTH SYSTEM (Persistence Enabled)
     window.handleLogin = async () => {
         const email = "du.darkunkwon.info@gmail.com";
         const pass = document.getElementById('log-pass').value;
-        const btnText = document.getElementById('login-text');
+        const btn = document.getElementById('login-btn');
 
-        if(!pass) return Swal.fire('Error', 'Password Required!', 'error');
+        if(!pass) return Swal.fire('Error', 'Please enter admin password', 'error');
 
-        btnText.innerText = "Authenticating...";
+        btn.disabled = true;
+        document.getElementById('login-text').innerText = "Verifying...";
         
         try {
+            // Set persistence so user stays logged in
             await setPersistence(auth, browserLocalPersistence);
             await signInWithEmailAndPassword(auth, email, pass);
-            Swal.fire({ title: 'Welcome Admin!', icon: 'success', timer: 1500, showConfirmButton: false });
+            Swal.fire({ title: 'Welcome Master!', icon: 'success', timer: 1500, showConfirmButton: false });
         } catch (e) {
-            btnText.innerText = "Sign In";
-            Swal.fire('Login Failed', 'The password you entered is incorrect.', 'error');
+            btn.disabled = false;
+            document.getElementById('login-text').innerText = "Verify Admin";
+            Swal.fire('Authentication Failed', 'Invalid credentials or network error.', 'error');
         }
     };
 
-    window.handleLogout = () => signOut(auth);
+    window.handleLogout = () => {
+        signOut(auth).then(() => {
+            location.reload();
+        });
+    };
 
     onAuthStateChanged(auth, (user) => {
         const loginGate = document.getElementById('login-gate');
         if(user) {
             loginGate.style.display = 'none';
-            fetchData();
+            fetchRealtimeData();
         } else {
             loginGate.style.display = 'flex';
         }
     });
 
-    // --- 📊 REAL-TIME DATA FETCHING ---
-    function fetchData() {
+    // 📊 DATA MANAGEMENT
+    function fetchRealtimeData() {
         onValue(rootRef, (snap) => {
-            masterData = snap.val();
-            if(masterData) renderUI();
+            masterData = snap.val() || { app_config: {}, auth_database: [] };
+            autoCheckExpiry();
+            renderDashboard();
         });
     }
 
-    function renderUI() {
-        // App Stats
-        const authDb = masterData.auth_database || [];
-        document.getElementById('stat-total').innerText = authDb.length;
-        document.getElementById('stat-active').innerText = authDb.filter(x => x.status === 'active' || x.status === 'lifetime').length;
-        document.getElementById('stat-expired').innerText = authDb.filter(x => x.status === 'expired').length;
-        document.getElementById('stat-status').innerText = masterData.app_config.dialog_on ? 'ON' : 'OFF';
+    // 🕒 AUTO-EXPIRY ENGINE
+    function autoCheckExpiry() {
+        if(!masterData.auth_database) return;
+        let updated = false;
+        const today = new Date().toISOString().split('T')[0];
 
-        // App Config Inputs
-        document.getElementById('cfg-title').value = masterData.app_config.title;
-        document.getElementById('cfg-logo').value = masterData.app_config.logo_url;
-        document.getElementById('cfg-buy').value = masterData.app_config.buy_url;
-        document.getElementById('cfg-ins').value = masterData.app_config.instruction;
+        masterData.auth_database.forEach(item => {
+            if(item.status === 'active' && item.expiry !== 'Lifetime' && item.expiry !== 'Unlimited') {
+                if(new Date(item.expiry) < new Date(today)) {
+                    item.status = 'expired';
+                    updated = true;
+                }
+            }
+        });
+
+        if(updated) {
+            update(ref(db, 'key-login-dumodz'), { auth_database: masterData.auth_database });
+        }
+    }
+
+    function renderDashboard() {
+        const dbList = masterData.auth_database || [];
+        
+        // Update Stats
+        document.getElementById('stat-total').innerText = dbList.length;
+        document.getElementById('stat-active').innerText = dbList.filter(x => x.status === 'active').length;
+        document.getElementById('stat-expired').innerText = dbList.filter(x => x.status === 'expired').length;
+        document.getElementById('stat-lifetime').innerText = dbList.filter(x => x.status === 'lifetime').length;
+
+        // Config Inputs
+        document.getElementById('cfg-title').value = masterData.app_config.title || '';
+        document.getElementById('cfg-logo').value = masterData.app_config.logo_url || '';
+        document.getElementById('cfg-ins').value = masterData.app_config.instruction || '';
         document.getElementById('cfg-dialog').checked = masterData.app_config.dialog_on;
 
-        // Key Cards Rendering
+        // Render Cards
         const container = document.getElementById('keys-container');
         container.innerHTML = '';
-        authDb.forEach((item, index) => {
+        dbList.forEach((item, index) => {
             container.innerHTML += `
-                <div class="col-12 col-md-6 col-lg-4 search-item" data-search="${item.key.toLowerCase()} ${item.device_id.toLowerCase()}">
+                <div class="col-12 col-md-6 col-lg-4 search-item" data-query="${item.key} ${item.device_id}">
                     <div class="key-card">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="stat-badge bg-light text-dark border"><i class="fas fa-circle me-1" style="color: ${getStatusColor(item.status)}"></i> ${item.status}</span>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="status-pill status-${item.status}">${item.status}</span>
                             <div class="dropdown">
-                                <i class="fas fa-ellipsis-h text-muted" style="cursor:pointer" data-bs-toggle="dropdown"></i>
-                                <ul class="dropdown-menu border-0 shadow-lg rounded-3">
-                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="openEditModal(${index})"><i class="fas fa-edit me-2"></i> Edit</a></li>
+                                <i class="fas fa-ellipsis-v text-muted" style="cursor:pointer" data-bs-toggle="dropdown"></i>
+                                <ul class="dropdown-menu border-0 shadow-lg">
+                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="openEditModal(${index})"><i class="fas fa-pen me-2"></i> Edit Key</a></li>
                                     <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteKey(${index})"><i class="fas fa-trash me-2"></i> Delete</a></li>
                                 </ul>
                             </div>
                         </div>
-                        <h5 class="fw-bold mb-1">${item.key}</h5>
-                        <p class="small text-muted mb-0"><i class="fas fa-fingerprint me-2"></i>ID: ${item.device_id || '---'}</p>
-                        <p class="small text-muted mb-3"><i class="fas fa-calendar-alt me-2"></i>Expiry: ${item.expiry}</p>
-                        <button class="btn btn-light btn-sm w-100 rounded-3 border fw-bold" onclick="copyKey('${item.key}')">Copy Access Key</button>
+                        <h5 class="fw-bold mb-2">${item.key}</h5>
+                        <div class="mb-2 small">
+                            <i class="fas fa-mobile-alt me-2 text-primary"></i> <span class="text-secondary">Device:</span> <b>${item.device_id || 'ANY'}</b>
+                        </div>
+                        <div class="mb-3 small">
+                            <i class="fas fa-calendar-check me-2 text-primary"></i> <span class="text-secondary">Expiry:</span> <b>${item.expiry}</b>
+                        </div>
+                        <button class="btn btn-light btn-sm w-100 fw-bold border" onclick="copyKey('${item.key}')">Copy Access Key</button>
                     </div>
                 </div>
             `;
         });
     }
 
-    function getStatusColor(s) {
-        if(s === 'active') return '#22c55e';
-        if(s === 'lifetime') return '#8b5cf6';
-        if(s === 'expired') return '#ef4444';
-        return '#94a3b8';
-    }
-
-    // --- 🛠 ACTIONS ---
+    // --- 🛠 WINDOW FUNCTIONS ---
     window.saveAppConfig = () => {
         const payload = {
-            buy_url: document.getElementById('cfg-buy').value,
-            dialog_on: document.getElementById('cfg-dialog').checked,
-            instruction: document.getElementById('cfg-ins').value,
+            title: document.getElementById('cfg-title').value,
             logo_url: document.getElementById('cfg-logo').value,
-            title: document.getElementById('cfg-title').value
+            instruction: document.getElementById('cfg-ins').value,
+            dialog_on: document.getElementById('cfg-dialog').checked
         };
         update(ref(db, 'key-login-dumodz/app_config'), payload)
-        .then(() => Swal.fire('Updated', 'Global settings saved!', 'success'));
+        .then(() => Swal.fire('Settings Updated', 'Real-time database updated successfully!', 'success'));
     };
 
     window.openAddModal = () => {
         document.getElementById('edit-id').value = "-1";
-        document.getElementById('modalTitle').innerText = "Create New Key";
-        document.getElementById('key-name').value = "";
+        document.getElementById('modalTitle').innerText = "Create New Access Key";
+        document.getElementById('key-name').value = "DUMODZ-" + Math.random().toString(36).substring(2, 8).toUpperCase();
         document.getElementById('key-expiry').value = "";
-        document.getElementById('key-device').value = "";
+        document.getElementById('key-status').value = "active";
+        document.getElementById('key-device').value = "ANY";
         keyModal.show();
     };
 
     window.openEditModal = (i) => {
         const item = masterData.auth_database[i];
         document.getElementById('edit-id').value = i;
-        document.getElementById('modalTitle').innerText = "Edit Key Details";
+        document.getElementById('modalTitle').innerText = "Edit User License";
         document.getElementById('key-name').value = item.key;
         document.getElementById('key-expiry').value = item.expiry;
         document.getElementById('key-status').value = item.status;
-        document.getElementById('key-device').value = item.device_id;
+        document.getElementById('key-device').value = item.device_id || 'ANY';
         keyModal.show();
     };
 
     window.saveKeyData = () => {
         const idx = parseInt(document.getElementById('edit-id').value);
-        const obj = {
-            device_id: document.getElementById('key-device').value,
-            expiry: document.getElementById('key-expiry').value,
+        const newKey = {
+            device_id: document.getElementById('key-device').value || 'ANY',
+            expiry: document.getElementById('key-expiry').value || 'Lifetime',
             key: document.getElementById('key-name').value,
             status: document.getElementById('key-status').value
         };
-        let dbList = masterData.auth_database || [];
-        if(idx === -1) dbList.push(obj); else dbList[idx] = obj;
         
-        set(ref(db, 'key-login-dumodz/auth_database'), dbList)
-        .then(() => { keyModal.hide(); Swal.fire('Success', 'Database Synchronized!', 'success'); });
+        let list = masterData.auth_database || [];
+        if(idx === -1) list.push(newKey); else list[idx] = newKey;
+        
+        set(ref(db, 'key-login-dumodz/auth_database'), list)
+        .then(() => { keyModal.hide(); Swal.fire('Saved!', 'Key database is synchronized.', 'success'); });
     };
 
     window.deleteKey = (i) => {
-        Swal.fire({ title: 'Are you sure?', text: "Key will be deleted permanently!", icon: 'warning', showCancelButton: true }).then(r => {
+        Swal.fire({
+            title: 'Delete Key?',
+            text: "This user will lose access immediately!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444'
+        }).then(r => {
             if(r.isConfirmed) {
                 let list = masterData.auth_database;
                 list.splice(i, 1);
@@ -454,13 +502,13 @@
     window.filterKeys = () => {
         const q = document.getElementById('search-input').value.toLowerCase();
         document.querySelectorAll('.search-item').forEach(el => {
-            el.style.display = el.dataset.search.includes(q) ? 'block' : 'none';
+            el.style.display = el.dataset.query.toLowerCase().includes(q) ? 'block' : 'none';
         });
     };
 
     window.copyKey = (t) => {
         navigator.clipboard.writeText(t);
-        Swal.fire({ title: 'Copied!', timer: 1000, showConfirmButton: false, toast: true, position: 'top-end', icon: 'success' });
+        Swal.fire({ title: 'Key Copied!', timer: 800, showConfirmButton: false, toast: true, position: 'top-end', icon: 'success' });
     };
 
     window.toggleSidebar = () => {
